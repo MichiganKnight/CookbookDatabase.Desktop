@@ -4,6 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from "node:url"
 
 import { closeDatabaseConnection, testDatabaseConnection } from './services/database-service.js'
+import { getRecipeCategorySummaries } from './repositories/recipe-repository.js'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url))
 const developmentUrl = 'http://localhost:5173'
@@ -59,6 +60,10 @@ function registerIpcHandlers(): void {
 
     ipcMain.handle('database:test', async () => {
         return testDatabaseConnection()
+    })
+
+    ipcMain.handle('recipes:get-category-summaries', async () => {
+        return getRecipeCategorySummaries()
     })
 }
 

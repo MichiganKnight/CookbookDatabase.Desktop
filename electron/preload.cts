@@ -5,5 +5,9 @@ contextBridge.exposeInMainWorld('cookbookDatabase', {
 
     database: {
         test: () => ipcRenderer.invoke('database:test')
+    },
+
+    recipes: {
+        getCategorySummaries: () => ipcRenderer.invoke('recipes:get-category-summaries')
     }
 })

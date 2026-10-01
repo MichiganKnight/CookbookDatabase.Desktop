@@ -1,0 +1,336 @@
+:root {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #f5f7fa;
+    background: #101216;
+}
+
+html,
+body,
+#root {
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    background: radial-gradient(circle at top right, rgba(89, 70, 255, 0.08), transparent 34rem), #101216;
+}
+
+a {
+    color: inherit;
+}
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.app-sidebar {
+    display: flex;
+    flex: 0 0 260px;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 1.5rem 1rem;
+    border-right: 1px solid #292d35;
+    background: #15181e;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0 0.75rem 1.5rem;
+}
+
+.sidebar-brand-icon {
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border-radius: 14px;
+    color: #fff;
+    background: linear-gradient(135deg, #6f5cff, #4b38da);
+}
+
+.sidebar-brand-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.sidebar-brand-subtitle {
+    color: #9299a6;
+    font-size: 0.82rem;
+}
+
+.sidebar-navigation {
+    overflow-y: auto;
+    padding-right: 0.15rem;
+}
+
+.sidebar-section-label {
+    padding: 0 0.75rem 0.6rem;
+    color: #737b89;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.25rem;
+    padding: 0.67rem 0.75rem;
+    border-radius: 9px;
+    color: #aeb4bf;
+    text-decoration: none;
+    transition: color 150ms ease, background-color 150ms ease;
+}
+
+.sidebar-link:hover {
+    color: #fff;
+    background: #20242c;
+}
+
+.sidebar-link.active {
+    color: #fff;
+    background: #292447;
+}
+
+.sidebar-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: auto;
+    padding: 1.25rem 0.75rem 0;
+    color: #858d9b;
+    font-size: 0.78rem;
+}
+
+.desktop-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #32d583;
+    box-shadow: 0 0 0 4px rgba(50, 213, 131, 0.12);
+}
+
+.app-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.app-header {
+    display: flex;
+    min-height: 82px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #292d35;
+    background: rgba(16, 18, 22, 0.85);
+}
+
+.app-header-title {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.app-header-subtitle {
+    margin-top: 0.15rem;
+    color: #858d9b;
+    font-size: 0.8rem;
+}
+
+.database-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #333844;
+    border-radius: 999px;
+    color: #b5bbc6;
+    background: #1a1e25;
+    font-size: 0.8rem;
+}
+
+.app-page {
+    padding: 2rem;
+}
+
+.dashboard-hero {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem;
+    border: 1px solid #2d3240;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(111, 92, 255, 0.18), rgba(26, 30, 37, 0.7));
+}
+
+.dashboard-eyebrow {
+    margin-bottom: 0.5rem;
+    color: #9c8dff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 750;
+}
+
+.dashboard-description {
+    max-width: 620px;
+    margin: 0.75rem 0 0;
+    color: #a5acb8;
+}
+
+.recipe-total {
+    display: flex;
+    min-width: 180px;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid rgba(156, 141, 255, 0.3);
+    border-radius: 14px;
+    background: rgba(16, 18, 22, 0.55);
+}
+
+.recipe-total-number {
+    font-size: 1.55rem;
+    font-weight: 750;
+}
+
+.recipe-total-label {
+    color: #9ba2af;
+    font-size: 0.78rem;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem 0 1rem;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.section-heading p {
+    margin: 0.25rem 0 0;
+    color: #858d9b;
+    font-size: 0.85rem;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 1rem;
+}
+
+.category-card {
+    display: flex;
+    min-height: 112px;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem;
+    border: 1px solid #2d323c;
+    border-radius: 14px;
+    color: #fff;
+    background: #191d24;
+    text-decoration: none;
+    transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.category-card:hover {
+    transform: translateY(-2px);
+    border-color: #6f5cff;
+    background: #1e222b;
+}
+
+.category-card-icon,
+.category-page-icon {
+    display: grid;
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 13px;
+    color: #a99eff;
+    background: rgba(111, 92, 255, 0.14);
+}
+
+.category-card-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.category-card-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.category-card-count {
+    margin-top: 0.3rem;
+    color: #8e96a4;
+    font-size: 0.82rem;
+}
+
+.category-card-arrow {
+    color: #656d7a;
+    transition: color 150ms ease, transform 150ms ease;
+}
+
+.category-card:hover .category-card-arrow {
+    color: #a99eff;
+    transform: translateX(3px);
+}
+
+.dashboard-state {
+    display: flex;
+    min-height: 220px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    color: #9ba2af;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 2rem;
+    color: #a99eff;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: #c0b8ff;
+}
+
+.category-page-heading {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.category-page-heading h1 {
+    margin: 0;
+}
+
+.category-page-heading p {
+    margin: 0.45rem 0 0;
+    color: #9299a6;
+}
+
+.empty-page {
+    padding: 3rem;
+    text-align: center;
+}

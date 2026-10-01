@@ -109,6 +109,20 @@ async function getDatabaseConnection(): Promise<NativeSqlConnection> {
     return pendingConnection
 }
 
+export async function executeDatabaseQuery<T>(queryText: string): Promise<T[]> {
+    try {
+        const connection = await getDatabaseConnection()
+
+        const result = await connection.promises.query<T>(queryText)
+
+        return result.first
+    } catch (error: unknown) {
+        await discardDatabaseConnection()
+
+        throw error
+    }
+}
+
 function convertServerTime(value: Date | string): string {
     if (value instanceof Date) {
         return value.toISOString()
