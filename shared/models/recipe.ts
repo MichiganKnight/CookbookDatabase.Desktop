@@ -5,3 +5,7 @@ export interface RecipeListItem {
     name: string
     category: RecipeCategory
 }
+
+export interface RecipeDetails extends RecipeListItem {
+    imageDataUrl: string | null
+}

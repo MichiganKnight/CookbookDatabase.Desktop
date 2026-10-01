@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from "node:url"
 
 import { closeDatabaseConnection, testDatabaseConnection } from './services/database-service.js'
-import { getRecipeCategorySummaries, getRecipesByCategory } from './repositories/recipe-repository.js'
+import { getRecipeCategorySummaries, getRecipesByCategory, getRecipeById } from './repositories/recipe-repository.js'
 import { isRecipeCategory } from '../shared/models/recipe-category.js'
 import type { RecipeCategory } from '../shared/models/recipe-category.js'
 
@@ -73,11 +73,26 @@ function registerIpcHandlers(): void {
 
         return getRecipesByCategory(category)
     })
+
+    ipcMain.handle('recipes:get-by-id', async (_event, categoryValue: unknown, recipeIdValue: unknown) => {
+        const category = resolveRecipeCategory(categoryValue)
+        const recipeId = resolveRecipeId(recipeIdValue)
+
+        return getRecipeById(category, recipeId)
+    })
 }
 
 function resolveRecipeCategory(value: unknown): RecipeCategory {
     if (!isRecipeCategory(value)) {
         throw new Error(`Unsupported Recipe Category: ${String(value)}`)
+    }
+
+    return value
+}
+
+function resolveRecipeId(value: unknown): number {
+    if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 1) {
+        throw new Error(`Invalid Recipe ID: ${String(value)}`)
     }
 
     return value

@@ -395,14 +395,19 @@ a {
     align-items: center;
     gap: 0.9rem;
     padding: 1rem;
+    color: #f5f7fa;
+    text-decoration: none;
+    cursor: pointer;
     border: 1px solid #2d323c;
     border-radius: 12px;
     background: #191d24;
-    transition: border-color 150ms ease, background-color 150ms ease;
+    transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
 }
 
 .recipe-list-item:hover {
+    transform: translateY(-1px);
     border-color: #5142a5;
+    color: #fff;
     background: #1e222b;
 }
 
@@ -455,4 +460,88 @@ a {
 
 .empty-recipe-list p {
     margin: 0;
+}
+
+.recipe-details-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.recipe-details-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.recipe-details-header p {
+    margin: 0.4rem 0 0;
+    color: #858d9b;
+    font-size: 0.82rem;
+}
+
+.recipe-details-card {
+    overflow: hidden;
+    border: 1px solid #2d323c;
+    border-radius: 16px;
+    background: #191d24;
+}
+
+.recipe-details-title {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid #2d323c;
+    color: #a99eff;
+}
+
+.recipe-details-title h2 {
+    margin: 0;
+    color: #f5f7fa;
+    font-size: 1.1rem;
+}
+
+.recipe-details-title span {
+    display: block;
+    margin-top: 0.25rem;
+    color: #7e8694;
+    font-size: 0.75rem;
+}
+
+.recipe-image-panel {
+    display: grid;
+    min-height: 420px;
+    padding: 1.5rem;
+    place-items: center;
+    background: #11141a;
+}
+
+.recipe-image {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 70vh;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.recipe-image-empty {
+    display: grid;
+    place-items: center;
+    gap: 0.7rem;
+    color: #737b89;
+    text-align: center;
+}
+
+.recipe-image-empty strong {
+    color: #c3c8d1;
+    font-size: 1rem;
+}
+
+.recipe-image-empty span {
+    max-width: 360px;
+    font-size: 0.82rem;
 }

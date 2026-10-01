@@ -128,7 +128,7 @@ function CategoryPage() {
             {!isLoading && !error && filteredRecipes.length > 0 && (
                 <div className="recipe-list">
                     {filteredRecipes.map((recipe) => (
-                        <article key={recipe.id} className="recipe-list-item">
+                        <Link key={recipe.id} to={`/recipes/${recipe.category}/${recipe.id}`} className="recipe-list-item">
                             <div className="recipe-list-icon">
                                 <BookOpen size={20}/>
                             </div>
@@ -142,7 +142,7 @@ function CategoryPage() {
                                     Recipe #{recipe.id}
                                 </span>
                             </div>
-                        </article>
+                        </Link>
                     ))}
                 </div>
             )}
