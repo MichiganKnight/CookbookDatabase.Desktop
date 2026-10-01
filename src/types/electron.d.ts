@@ -12,10 +12,11 @@ interface CookbookDatabaseDesktopApi {
     },
 
     recipes: {
+        create: (category: RecipeCategory, name: string, imageDataUrl: string) => Promise<RecipeListItem>
+        delete: (category: RecipeCategory, recipeId: number) => Promise<boolean>
         getCategorySummaries: () => Promise<RecipeCategorySummary[]>
         getByCategory: (category: RecipeCategory) => Promise<RecipeListItem[]>
         getById: (category: RecipeCategory, recipeId: number) => Promise<RecipeDetails | null>
-        create: (category: RecipeCategory, name: string, imageDataUrl: string) => Promise<RecipeListItem>
     }
 }
 

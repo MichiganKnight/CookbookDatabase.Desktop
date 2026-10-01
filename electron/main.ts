@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from "node:url"
 
 import { closeDatabaseConnection, testDatabaseConnection } from './services/database-service.js'
-import { getRecipeCategorySummaries, getRecipesByCategory, getRecipeById, createRecipe } from './repositories/recipe-repository.js'
+import { createRecipe, deleteRecipe, getRecipeCategorySummaries, getRecipesByCategory, getRecipeById } from './repositories/recipe-repository.js'
 import { isRecipeCategory } from '../shared/models/recipe-category.js'
 import type { RecipeCategory } from '../shared/models/recipe-category.js'
 
@@ -64,6 +64,27 @@ function registerIpcHandlers(): void {
         return testDatabaseConnection()
     })
 
+    ipcMain.handle('recipes:create', async (_event, categoryValue: unknown, nameValue: unknown, imageDataUrlValue: unknown) => {
+        const category = resolveRecipeCategory(categoryValue)
+
+        if (typeof nameValue !== 'string') {
+            throw new Error('The Recipe Name is Invalid')
+        }
+
+        if (typeof imageDataUrlValue !== 'string') {
+            throw new Error('The Recipe Image is Invalid')
+        }
+
+        return createRecipe(category, nameValue, imageDataUrlValue)
+    })
+
+    ipcMain.handle('recipes:delete', async (_event, categoryValue: unknown, recipeIdValue: unknown) => {
+        const category = resolveRecipeCategory(categoryValue)
+        const recipeId = resolveRecipeId(recipeIdValue)
+
+        return deleteRecipe(category, recipeId)
+    })
+
     ipcMain.handle('recipes:get-category-summaries', async () => {
         return getRecipeCategorySummaries()
     })
@@ -79,20 +100,6 @@ function registerIpcHandlers(): void {
         const recipeId = resolveRecipeId(recipeIdValue)
 
         return getRecipeById(category, recipeId)
-    })
-
-    ipcMain.handle('recipes:create', async (_event, categoryValue: unknown, nameValue: unknown, imageDataUrlValue: unknown) => {
-        const category = resolveRecipeCategory(categoryValue)
-
-        if (typeof nameValue !== 'string') {
-            throw new Error('The Recipe Name is Invalid')
-        }
-
-        if (typeof imageDataUrlValue !== 'string') {
-            throw new Error('The Recipe Image is Invalid')
-        }
-
-        return createRecipe(category, nameValue, imageDataUrlValue)
     })
 }
 

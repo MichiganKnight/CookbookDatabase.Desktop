@@ -3,6 +3,14 @@ import type { RecipeCategory, RecipeCategorySummary } from '../../shared/models/
 import type { RecipeDetails, RecipeListItem } from '../../shared/models/recipe.js'
 import { executeDatabaseQuery } from '../services/database-service.js'
 
+interface CreatedRecipeRow {
+    id: number | string
+}
+
+interface DeleteRecipeRow {
+    id: number | string
+}
+
 interface CategoryCountRow {
     category: string
     recipeCount: number | string
@@ -17,10 +25,6 @@ interface RecipeDetailsRow {
     id: number | string
     name: string
     image: Uint8Array | null
-}
-
-interface CreatedRecipeRow {
-    id: number | string
 }
 
 const categoryTableNames: Record<RecipeCategory, string> = {
@@ -88,6 +92,52 @@ function convertDataUrlToImageBuffer(imageDataUrl: string): Buffer {
     }
 
     return imageBuffer
+}
+
+export async function createRecipe(category: RecipeCategory, nameValue: string, imageDataUrl: string): Promise<RecipeListItem> {
+    const name = nameValue.trim()
+
+    if (!name) {
+        throw new Error('A Recipe Name is Required')
+    }
+
+    if (name.length > 100) {
+        throw new Error('The Recipe Name Must Be 100 Characters or Fewer')
+    }
+
+    const imageBuffer = convertDataUrlToImageBuffer(imageDataUrl)
+    const tableName = categoryTableNames[category]
+
+    const rows = await executeDatabaseQuery<CreatedRecipeRow>(`INSERT INTO dbo.[${tableName}] (Name, Image) OUTPUT INSERTED.Id AS id VALUES (?, ?);`, [
+        name,
+        imageBuffer
+    ])
+
+    const id = Number(rows[0]?.id)
+
+    if (!Number.isSafeInteger(id) || id < 1) {
+        throw new Error('SQL Server Did Not Return the New Recipe ID')
+    }
+
+    return {
+        id,
+        name,
+        category
+    }
+}
+
+export async function deleteRecipe(category: RecipeCategory, recipeId: number): Promise<boolean> {
+    if (!Number.isSafeInteger(recipeId) || recipeId < 1) {
+        throw new Error('The Recipe ID is Invalid')
+    }
+
+    const tableName = categoryTableNames[category]
+
+    const rows = await executeDatabaseQuery<DeleteRecipeRow>(`DELETE FROM dbo.[${tableName}] OUTPUT DELETED.Id AS id WHERE Id = ?;`, [
+        recipeId
+    ])
+
+    return rows.length > 0
 }
 
 export async function getRecipeCategorySummaries(): Promise<RecipeCategorySummary[]> {
@@ -174,37 +224,5 @@ export async function getRecipeById(category: RecipeCategory, recipeId: number):
         name: row.name.trim(),
         category,
         imageDataUrl: convertImageToDataUrl(row.image)
-    }
-}
-
-export async function createRecipe(category: RecipeCategory, nameValue: string, imageDataUrl: string): Promise<RecipeListItem> {
-    const name = nameValue.trim()
-
-    if (!name) {
-        throw new Error('A Recipe Name is Required')
-    }
-
-    if (name.length > 100) {
-        throw new Error('The Recipe Name Must Be 100 Characters or Fewer')
-    }
-
-    const imageBuffer = convertDataUrlToImageBuffer(imageDataUrl)
-    const tableName = categoryTableNames[category]
-
-    const rows = await executeDatabaseQuery<CreatedRecipeRow>(`INSERT INTO dbo.[${tableName}] (Name, Image) OUTPUT INSERTED.Id AS id VALUES (?, ?);`, [
-        name,
-        imageBuffer
-    ])
-
-    const id = Number(rows[0]?.id)
-
-    if (!Number.isSafeInteger(id) || id < 1) {
-        throw new Error('SQL Server Did Not Return the New Recipe ID')
-    }
-
-    return {
-        id,
-        name,
-        category
     }
 }

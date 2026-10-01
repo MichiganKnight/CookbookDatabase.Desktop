@@ -8,9 +8,10 @@ contextBridge.exposeInMainWorld('cookbookDatabase', {
     },
 
     recipes: {
+        create: (category: string, name: string, imageDataUrl: string) => ipcRenderer.invoke('recipes:create', category, name, imageDataUrl),
+        delete: (category: string, recipeId: number) => ipcRenderer.invoke('recipes:delete', category, recipeId),
         getCategorySummaries: () => ipcRenderer.invoke('recipes:get-category-summaries'),
         getByCategory: (category: string) => ipcRenderer.invoke('recipes:get-by-category', category),
-        getById: (category: string, recipeId: number) => ipcRenderer.invoke('recipes:get-by-id', category, recipeId),
-        create: (category: string, name: string, imageDataUrl: string) => ipcRenderer.invoke('recipes:create', category, name, imageDataUrl)
+        getById: (category: string, recipeId: number) => ipcRenderer.invoke('recipes:get-by-id', category, recipeId)
     }
 })
