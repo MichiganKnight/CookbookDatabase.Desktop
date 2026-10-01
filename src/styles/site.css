@@ -334,3 +334,125 @@ a {
     padding: 3rem;
     text-align: center;
 }
+
+.category-list-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.recipe-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+}
+
+.recipe-search {
+    display: flex;
+    width: min(100%, 480px);
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid #303541;
+    border-radius: 10px;
+    color: #858d9b;
+    background: #191d24;
+}
+
+.recipe-search:focus-within {
+    border-color: #6f5cff;
+    box-shadow: 0 0 0 3px rgba(111, 92, 255, 0.12);
+}
+
+.recipe-search input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    color: #f5f7fa;
+    background: transparent;
+}
+
+.recipe-search input::placeholder {
+    color: #717986;
+}
+
+.recipe-result-count {
+    color: #858d9b;
+    font-size: 0.82rem;
+}
+
+.recipe-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 0.85rem
+}
+
+.recipe-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem;
+    border: 1px solid #2d323c;
+    border-radius: 12px;
+    background: #191d24;
+    transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.recipe-list-item:hover {
+    border-color: #5142a5;
+    background: #1e222b;
+}
+
+.recipe-list-icon {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 10px;
+    color: #a99eff;
+    background: rgba(111, 92, 255, 0.14);
+}
+
+.recipe-list-content {
+    min-width: 0;
+}
+
+.recipe-list-content h2 {
+    overflow: hidden;
+    margin: 0;
+    font-size: 0.94rem;
+    font-weight: 650;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.recipe-list-content span {
+    display: block;
+    margin-top: 0.25rem;
+    color: #747c89;
+    font-size: 0.73rem;
+}
+
+.empty-recipe-list {
+    display: grid;
+    min-height: 260px;
+    place-items: center;
+    align-content: center;
+    gap: 0.65rem;
+    color: #7e8694;
+    text-align: center;
+}
+
+.empty-recipe-list h2 {
+    margin: 0.4rem 0 0;
+    color: #d9dde4;
+    font-size: 1.1rem;
+}
+
+.empty-recipe-list p {
+    margin: 0;
+}

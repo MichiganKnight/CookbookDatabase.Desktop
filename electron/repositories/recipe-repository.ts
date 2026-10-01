@@ -1,10 +1,16 @@
 import { recipeCategories } from '../../shared/models/recipe-category.js';
 import type { RecipeCategory, RecipeCategorySummary } from '../../shared/models/recipe-category.js'
+import type { RecipeListItem } from '../../shared/models/recipe.js'
 import { executeDatabaseQuery } from '../services/database-service.js'
 
 interface CategoryCountRow {
     category: string
     recipeCount: number | string
+}
+
+interface RecipeListRow {
+    id: number | string
+    name: string
 }
 
 const categoryTableNames: Record<RecipeCategory, string> = {
@@ -49,4 +55,28 @@ export async function getRecipeCategorySummaries(): Promise<RecipeCategorySummar
         label,
         recipeCount: countsByCategory.get(id) ?? 0
     }))
+}
+
+export async function getRecipesByCategory(category: RecipeCategory): Promise<RecipeListItem[]> {
+    const tableName = categoryTableNames[category]
+
+    const rows = await executeDatabaseQuery<RecipeListRow>(`SELECT Id AS id, Name AS name FROM dbo.[${tableName}] ORDER BY Name ASC;`)
+
+    return rows.map((row) => {
+        const id = Number(row.id)
+
+        if (!Number.isSafeInteger(id) || id < 1) {
+            throw new Error(`Invalid Recipe ID Returned From ${tableName}`)
+        }
+
+        if (typeof row.name !== 'string' || !row.name.trim()) {
+            throw new Error(`Recipe ${id} Has an Invalid Name`)
+        }
+
+        return {
+            id,
+            name: row.name,
+            category
+        }
+    })
 }

@@ -52,3 +52,7 @@ export interface RecipeCategorySummary {
     label: string
     recipeCount: number
 }
+
+export function isRecipeCategory(value: unknown): value is RecipeCategory {
+    return (typeof value === 'string' && recipeCategories.some(({ id }) => id === value))
+}

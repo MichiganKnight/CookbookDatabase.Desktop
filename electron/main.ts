@@ -4,7 +4,9 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from "node:url"
 
 import { closeDatabaseConnection, testDatabaseConnection } from './services/database-service.js'
-import { getRecipeCategorySummaries } from './repositories/recipe-repository.js'
+import { getRecipeCategorySummaries, getRecipesByCategory } from './repositories/recipe-repository.js'
+import { isRecipeCategory } from '../shared/models/recipe-category.js'
+import type { RecipeCategory } from '../shared/models/recipe-category.js'
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url))
 const developmentUrl = 'http://localhost:5173'
@@ -65,6 +67,20 @@ function registerIpcHandlers(): void {
     ipcMain.handle('recipes:get-category-summaries', async () => {
         return getRecipeCategorySummaries()
     })
+
+    ipcMain.handle('recipes:get-by-category', async (_event, categoryValue: unknown) => {
+        const category = resolveRecipeCategory(categoryValue)
+
+        return getRecipesByCategory(category)
+    })
+}
+
+function resolveRecipeCategory(value: unknown): RecipeCategory {
+    if (!isRecipeCategory(value)) {
+        throw new Error(`Unsupported Recipe Category: ${String(value)}`)
+    }
+
+    return value
 }
 
 app.whenReady().then(() => {
