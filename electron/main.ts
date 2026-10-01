@@ -1,13 +1,24 @@
+import { config as loadEnvironment } from 'dotenv'
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from "node:url"
 
+import { closeDatabaseConnection, testDatabaseConnection } from './services/database-service.js'
+
 const currentDirectory = dirname(fileURLToPath(import.meta.url))
 const developmentUrl = 'http://localhost:5173'
 
+loadEnvironment({
+    path: join(process.cwd(), '.env.local'),
+    quiet: true
+})
+
 function createWindow(): void {
+    const windowIconPath = app.isPackaged ? join(app.getAppPath(), 'dist', 'favicon.ico') : join(app.getAppPath(), 'public', 'favicon.ico')
+
     const mainWindow = new BrowserWindow({
         title: 'Cookbook Database',
+        icon: windowIconPath,
         width: 1280,
         height: 720,
         minWidth: 1000,
@@ -45,6 +56,10 @@ function registerIpcHandlers(): void {
             platform: process.platform
         }
     })
+
+    ipcMain.handle('database:test', async () => {
+        return testDatabaseConnection()
+    })
 }
 
 app.whenReady().then(() => {
@@ -58,6 +73,10 @@ app.whenReady().then(() => {
             createWindow()
         }
     })
+})
+
+app.on('before-quit', () => {
+    void closeDatabaseConnection()
 })
 
 app.on('window-all-closed', () => {

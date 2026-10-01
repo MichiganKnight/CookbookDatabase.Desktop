@@ -24,3 +24,7 @@ release
 *.njsproj
 *.sln
 *.sw?
+
+# Local database credentials
+.env
+.env.*
