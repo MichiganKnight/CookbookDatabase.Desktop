@@ -545,3 +545,127 @@ a {
     max-width: 360px;
     font-size: 0.82rem;
 }
+
+.add-recipe-heading {
+    margin-bottom: 1.5rem;
+}
+
+.add-recipe-heading h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.add-recipe-heading p {
+    margin: 0.5rem 0 0;
+    color: #9299a6;
+}
+
+.add-recipe-form {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(360px, 1.2fr);
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid #2d323c;
+    border-radius: 16px;
+    background: #191d24;
+}
+
+.add-recipe-fields {
+    min-width: 0;
+}
+
+.add-recipe-form .form-label {
+    color: #d9dde4;
+    font-size: 0.86rem;
+    font-weight: 650;
+}
+
+.add-recipe-form .form-control,
+.add-recipe-form .form-select {
+    border-color: #353b47;
+    color: #f5f7fa;
+    background-color: #11141a;
+}
+
+.add-recipe-form .form-control:focus,
+.add-recipe-form .form-select:focus {
+    border-color: #6f5cff;
+    box-shadow: 0 0 0 3px rgba(111, 92, 255, 0.15);
+}
+
+.add-recipe-form .form-select option {
+    color: #f5f7fa;
+    background: #191d24;
+}
+
+.add-recipe-form .form-text {
+    color: #777f8d;
+}
+
+.add-recipe-preview {
+    display: grid;
+    min-height: 420px;
+    place-items: center;
+    align-content: center;
+    padding: 1rem;
+    border: 1px dashed #3a404c;
+    border-radius: 12px;
+    background: #11141a;
+}
+
+.add-recipe-preview img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 480px;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.add-recipe-preview-name {
+    overflow: hidden;
+    width: 100%;
+    margin-top: 0.8rem;
+    color: #858d9b;
+    font-size: 0.75rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.add-recipe-preview-empty {
+    display: grid;
+    place-items: center;
+    gap: 0.7rem;
+    color: #777f8d;
+    text-align: center;
+}
+
+.add-recipe-preview-empty strong {
+    color: #c3c8d1;
+}
+
+.add-recipe-preview-empty span {
+    max-width: 280px;
+    font-size: 0.82rem;
+}
+
+.add-recipe-actions {
+    display: flex;
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #2d323c;
+}
+
+@media (max-width: 1100px) {
+    .add-recipe-form {
+        grid-template-columns: 1fr;
+    }
+
+    .add-recipe-actions {
+        grid-column: auto;
+    }
+}

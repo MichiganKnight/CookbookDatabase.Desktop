@@ -19,6 +19,10 @@ interface RecipeDetailsRow {
     image: Uint8Array | null
 }
 
+interface CreatedRecipeRow {
+    id: number | string
+}
+
 const categoryTableNames: Record<RecipeCategory, string> = {
     salad: 'Salad',
     soup: 'Soup',
@@ -62,6 +66,28 @@ function convertImageToDataUrl(image: Uint8Array | null): string | null {
     const mimeType = detectImageMimeType(imageBuffer)
 
     return `data:${mimeType};base64,${imageBuffer.toString('base64')}`
+}
+
+function convertDataUrlToImageBuffer(imageDataUrl: string): Buffer {
+    const match = /^data:image\/(?:png|jpeg|jpg|gif|bmp|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(imageDataUrl)
+
+    if (!match) {
+        throw new Error('The Selected File Is Not a Supported Image')
+    }
+
+    const imageBuffer = Buffer.from(match[1], 'base64')
+
+    if (imageBuffer.length === 0) {
+        throw new Error('The Selected Image Is Empty')
+    }
+
+    const maximumImageSize = 15 * 1024 * 1024
+
+    if (imageBuffer.length > maximumImageSize) {
+        throw new Error('The Selected Image Must be 15 MB or Smaller')
+    }
+
+    return imageBuffer
 }
 
 export async function getRecipeCategorySummaries(): Promise<RecipeCategorySummary[]> {
@@ -148,5 +174,37 @@ export async function getRecipeById(category: RecipeCategory, recipeId: number):
         name: row.name.trim(),
         category,
         imageDataUrl: convertImageToDataUrl(row.image)
+    }
+}
+
+export async function createRecipe(category: RecipeCategory, nameValue: string, imageDataUrl: string): Promise<RecipeListItem> {
+    const name = nameValue.trim()
+
+    if (!name) {
+        throw new Error('A Recipe Name is Required')
+    }
+
+    if (name.length > 100) {
+        throw new Error('The Recipe Name Must Be 100 Characters or Fewer')
+    }
+
+    const imageBuffer = convertDataUrlToImageBuffer(imageDataUrl)
+    const tableName = categoryTableNames[category]
+
+    const rows = await executeDatabaseQuery<CreatedRecipeRow>(`INSERT INTO dbo.[${tableName}] (Name, Image) OUTPUT INSERTED.Id AS id VALUES (?, ?);`, [
+        name,
+        imageBuffer
+    ])
+
+    const id = Number(rows[0]?.id)
+
+    if (!Number.isSafeInteger(id) || id < 1) {
+        throw new Error('SQL Server Did Not Return the New Recipe ID')
+    }
+
+    return {
+        id,
+        name,
+        category
     }
 }

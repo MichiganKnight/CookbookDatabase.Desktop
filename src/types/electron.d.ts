@@ -15,6 +15,7 @@ interface CookbookDatabaseDesktopApi {
         getCategorySummaries: () => Promise<RecipeCategorySummary[]>
         getByCategory: (category: RecipeCategory) => Promise<RecipeListItem[]>
         getById: (category: RecipeCategory, recipeId: number) => Promise<RecipeDetails | null>
+        create: (category: RecipeCategory, name: string, imageDataUrl: string) => Promise<RecipeListItem>
     }
 }
 

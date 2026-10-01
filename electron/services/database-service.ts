@@ -14,7 +14,7 @@ interface NativeQueryResult<T> {
 
 interface NativeSqlConnection {
     promises: {
-        query: <T>(queryText: string) => Promise<NativeQueryResult<T>>,
+        query: <T>(queryText: string, parameters?: DatabaseQueryParameter[]) => Promise<NativeQueryResult<T>>,
         close: () => Promise<void>
     }
 }
@@ -24,6 +24,8 @@ interface NativeSqlModule {
         open: (connectionString: string) => Promise<NativeSqlConnection>
     }
 }
+
+export type DatabaseQueryParameter = string | number | boolean | Date | Buffer | null
 
 const require = createRequire(import.meta.url)
 
@@ -109,11 +111,11 @@ async function getDatabaseConnection(): Promise<NativeSqlConnection> {
     return pendingConnection
 }
 
-export async function executeDatabaseQuery<T>(queryText: string): Promise<T[]> {
+export async function executeDatabaseQuery<T>(queryText: string, parameters: DatabaseQueryParameter[] = []): Promise<T[]> {
     try {
         const connection = await getDatabaseConnection()
 
-        const result = await connection.promises.query<T>(queryText)
+        const result = await connection.promises.query<T>(queryText, parameters)
 
         return result.first
     } catch (error: unknown) {
