@@ -1,4 +1,4 @@
-import { BookOpen, ChefHat, House, Plus } from 'lucide-react'
+import { BookOpen, ChefHat, House, Plus, Search } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 import { recipeCategories } from '../../shared/models/recipe-category'
@@ -30,6 +30,11 @@ function Sidebar() {
                 <NavLink to="/" end className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}>
                     <House size={18} />
                     <span>Dashboard</span>
+                </NavLink>
+
+                <NavLink to="/search" className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}>
+                    <Search size={18} />
+                    <span>Search</span>
                 </NavLink>
 
                 <NavLink to="/recipes/new" className={({ isActive }) => `sidebar-link${isActive ? ' active' : ''}`}>

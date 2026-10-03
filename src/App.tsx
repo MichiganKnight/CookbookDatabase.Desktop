@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage'
 import RecipeDetailsPage from './pages/RecipeDetailsPage'
 import AddRecipePage from "./pages/AddRecipePage.tsx"
 import EditRecipePage from './pages/EditRecipePage'
+import SearchPage from './pages/SearchPage'
 
 function App() {
     return (
@@ -13,6 +14,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<AppShell />}>
                     <Route index element={<DashboardPage />} />
+
+                    <Route path="/search" element={<SearchPage />} />
 
                     <Route path="/recipes/new" element={<AddRecipePage />} />
 

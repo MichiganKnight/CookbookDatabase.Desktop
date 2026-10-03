@@ -1,4 +1,4 @@
-import { recipeCategories } from '../../shared/models/recipe-category.js';
+import { isRecipeCategory, recipeCategories } from '../../shared/models/recipe-category.js';
 import type { RecipeCategory, RecipeCategorySummary } from '../../shared/models/recipe-category.js'
 import type { RecipeDetails, RecipeListItem } from '../../shared/models/recipe.js'
 import { executeDatabaseQuery } from '../services/database-service.js'
@@ -19,6 +19,12 @@ interface DeleteRecipeRow {
 interface CategoryCountRow {
     category: string
     recipeCount: number | string
+}
+
+interface RecipeSearchRow {
+    id: number | string
+    name: string
+    category: string
 }
 
 interface RecipeListRow {
@@ -97,6 +103,10 @@ function convertDataUrlToImageBuffer(imageDataUrl: string): Buffer {
     }
 
     return imageBuffer
+}
+
+function escapeSqlLikePattern(value: string): string {
+    return value.replaceAll('\\', '\\\\').replaceAll('%', '\\%').replaceAll('_', '\\_')
 }
 
 export async function updateRecipe(category: RecipeCategory, recipeId: number, nameValue: string, replacementImageDataUrl: string | null): Promise<RecipeListItem | null> {
@@ -207,6 +217,55 @@ export async function deleteRecipe(category: RecipeCategory, recipeId: number): 
     ])
 
     return rows.length > 0
+}
+
+export async function searchRecipes(searchValue: string): Promise<RecipeListItem[]> {
+    const searchTerm = searchValue.trim()
+
+    if (!searchTerm) {
+        return []
+    }
+
+    if (searchTerm.length > 100) {
+        throw new Error('The Search Term Must Be 100 Characters or Fewer')
+    }
+
+    const escapedSearchTerm = escapeSqlLikePattern(searchTerm)
+    const searchPattern = `%${escapedSearchTerm}%`
+
+    const searchStatements = recipeCategories.map(({ id }) => {
+        const tableName = categoryTableNames[id]
+
+        return `SELECT Id AS id, Name AS name, '${id}' AS category FROM dbo.[${tableName}] WHERE Name LIKE ? ESCAPE '\\'`
+    })
+
+    const queryText = `SELECT TOP (100) id, name, category FROM (${searchStatements.join('\nUNION ALL\n')}) AS recipeSearchResults ORDER BY name ASC, category ASC;`
+
+    const parameters = recipeCategories.map(() => searchPattern)
+
+    const rows = await executeDatabaseQuery<RecipeSearchRow>(queryText, parameters)
+
+    return rows.map((row) => {
+        const id = Number(row.id)
+
+        if (!Number.isSafeInteger(id) || id < 1) {
+            throw new Error('SQL Server Returned an Invalid Search Result ID')
+        }
+
+        if (typeof row.name !== 'string' || !row.name.trim()) {
+            throw new Error(`Search Result ${id} Has an Invalid Name`)
+        }
+
+        if (!isRecipeCategory(row.category)) {
+            throw new Error(`Search Result ${id} Has an Invalid Category`)
+        }
+
+        return {
+            id,
+            name: row.name.trim(),
+            category: row.category
+        }
+    })
 }
 
 export async function getRecipeCategorySummaries(): Promise<RecipeCategorySummary[]> {

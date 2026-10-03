@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from "node:url"
 
 import { closeDatabaseConnection, testDatabaseConnection } from './services/database-service.js'
-import { createRecipe, updateRecipe, deleteRecipe, getRecipeCategorySummaries, getRecipesByCategory, getRecipeById } from './repositories/recipe-repository.js'
+import { createRecipe, updateRecipe, deleteRecipe, searchRecipes, getRecipeCategorySummaries, getRecipesByCategory, getRecipeById } from './repositories/recipe-repository.js'
 import { isRecipeCategory } from '../shared/models/recipe-category.js'
 import type { RecipeCategory } from '../shared/models/recipe-category.js'
 
@@ -98,6 +98,14 @@ function registerIpcHandlers(): void {
         const recipeId = resolveRecipeId(recipeIdValue)
 
         return deleteRecipe(category, recipeId)
+    })
+
+    ipcMain.handle('recipes:search', async (_event, searchValue: unknown) => {
+        if (typeof searchValue !== 'string') {
+            throw new Error('The Recipe Search Term is Invalid')
+        }
+
+        return searchRecipes(searchValue)
     })
 
     ipcMain.handle('recipes:get-category-summaries', async () => {
