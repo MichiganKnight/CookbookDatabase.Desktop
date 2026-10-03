@@ -4,7 +4,8 @@ import AppShell from './components/AppShell'
 import CategoryPage from './pages/CategoryPage'
 import DashboardPage from './pages/DashboardPage'
 import RecipeDetailsPage from './pages/RecipeDetailsPage'
-import AddRecipePage from "./pages/AddRecipePage.tsx";
+import AddRecipePage from "./pages/AddRecipePage.tsx"
+import EditRecipePage from './pages/EditRecipePage'
 
 function App() {
     return (
@@ -16,6 +17,8 @@ function App() {
                     <Route path="/recipes/new" element={<AddRecipePage />} />
 
                     <Route path="/recipes/:category" element={<CategoryPage />} />
+
+                    <Route path="/recipes/:category/:recipeId/edit" element={<EditRecipePage />} />
 
                     <Route path="/recipes/:category/:recipeId" element={<RecipeDetailsPage />} />
                 </Route>

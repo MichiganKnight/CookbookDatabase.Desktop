@@ -7,6 +7,11 @@ interface CreatedRecipeRow {
     id: number | string
 }
 
+interface UpdatedRecipeRow {
+    id: number | string
+    name: string
+}
+
 interface DeleteRecipeRow {
     id: number | string
 }
@@ -76,13 +81,13 @@ function convertDataUrlToImageBuffer(imageDataUrl: string): Buffer {
     const match = /^data:image\/(?:png|jpeg|jpg|gif|bmp|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(imageDataUrl)
 
     if (!match) {
-        throw new Error('The Selected File Is Not a Supported Image')
+        throw new Error('The Selected File is Not a Supported Image')
     }
 
     const imageBuffer = Buffer.from(match[1], 'base64')
 
     if (imageBuffer.length === 0) {
-        throw new Error('The Selected Image Is Empty')
+        throw new Error('The Selected Image is Empty')
     }
 
     const maximumImageSize = 15 * 1024 * 1024
@@ -92,6 +97,70 @@ function convertDataUrlToImageBuffer(imageDataUrl: string): Buffer {
     }
 
     return imageBuffer
+}
+
+export async function updateRecipe(category: RecipeCategory, recipeId: number, nameValue: string, replacementImageDataUrl: string | null): Promise<RecipeListItem | null> {
+    if (!Number.isSafeInteger(recipeId) || recipeId < 1) {
+        throw new Error('The Recipe ID is Invalid')
+    }
+
+    const name = nameValue.trim()
+
+    if (!name) {
+        throw new Error('A Recipe Name is Required')
+    }
+
+    if (name.length > 100) {
+        throw new Error('The Recipe Name Must Be 100 Characters or Fewer')
+    }
+
+    const tableName = categoryTableNames[category]
+
+    let queryText: string
+    let parameters: Array<string | number | Buffer>
+
+    if (replacementImageDataUrl) {
+        const imageBuffer = convertDataUrlToImageBuffer(replacementImageDataUrl)
+
+        queryText = `UPDATE dbo.[${tableName}] SET Name = ?, Image = ? OUTPUT INSERTED.Id AS id, INSERTED.Name AS name WHERE Id = ?;`
+
+        parameters = [
+            name,
+            imageBuffer,
+            recipeId
+        ]
+    } else {
+        queryText = `UPDATE dbo.[${tableName}] SET Name = ? OUTPUT INSERTED.Id as id, INSERTED.Name AS name WHERE Id = ?;`
+
+        parameters = [
+            name,
+            recipeId
+        ]
+    }
+
+    const rows = await executeDatabaseQuery<UpdatedRecipeRow>(queryText, parameters)
+
+    const row = rows[0]
+
+    if (!row) {
+        return null
+    }
+
+    const updatedId = Number(row.id)
+
+    if (!Number.isSafeInteger(updatedId) || updatedId < 1) {
+        throw new Error('SQL Server Returned an Invalid Recipe ID')
+    }
+
+    if (typeof row.name !== 'string' || !row.name.trim()) {
+        throw new Error(`Recipe ${updatedId} Has an Invalid Updated Name`)
+    }
+
+    return {
+        id: updatedId,
+        name: row.name.trim(),
+        category
+    }
 }
 
 export async function createRecipe(category: RecipeCategory, nameValue: string, imageDataUrl: string): Promise<RecipeListItem> {
@@ -196,7 +265,7 @@ export async function getRecipesByCategory(category: RecipeCategory): Promise<Re
 
 export async function getRecipeById(category: RecipeCategory, recipeId: number): Promise<RecipeDetails | null> {
     if (!Number.isSafeInteger(recipeId) || recipeId < 1) {
-        throw new Error('The Recipe ID Is Invalid')
+        throw new Error('The Recipe ID is Invalid')
     }
 
     const tableName = categoryTableNames[category]

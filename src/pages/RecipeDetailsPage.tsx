@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, ImageOff, RefreshCw, Trash2, TriangleAlert } from 'lucide-react'
+import { ArrowLeft, BookOpen, ImageOff, Pencil, RefreshCw, Trash2, TriangleAlert } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
 
@@ -42,7 +42,7 @@ function RecipeDetailsPage() {
         }
 
         if (!window.cookbookDatabase) {
-            setDeleteError('The Electron Desktop API Is Not Available')
+            setDeleteError('The Electron Desktop API is Not Available')
 
             return
         }
@@ -106,6 +106,13 @@ function RecipeDetailsPage() {
                         <RefreshCw size={16}/>
                         Refresh
                     </button>
+
+                    {recipe && (
+                        <Link to={`/recipes/${category}/${recipe.id}/edit`} className="btn btn-outline-primary d-inline-flex align-items-center gap-2">
+                            <Pencil size={16} />
+                            Edit
+                        </Link>
+                    )}
 
                     {recipe && (
                         <button type="button" className="btn btn-outline-danger d-inline-flex align-items-center gap-2" onClick={() => void handleDelete()} disabled={isDeleting}>

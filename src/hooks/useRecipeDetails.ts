@@ -17,7 +17,7 @@ export function useRecipeDetails(category: RecipeCategory | null, recipeId: numb
         }
 
         if (!window.cookbookDatabase) {
-            setError('The Electron Desktop API Is Not Available')
+            setError('The Electron Desktop API is Not Available')
             setIsLoading(false)
 
             return

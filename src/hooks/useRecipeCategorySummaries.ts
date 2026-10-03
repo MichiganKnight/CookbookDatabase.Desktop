@@ -9,7 +9,7 @@ export function useRecipeCategorySummaries() {
 
     const loadSummaries = useCallback(async (): Promise<void> => {
         if (!window.cookbookDatabase) {
-            setError('The Electron API Is Not Available')
+            setError('The Electron API is Not Available')
             setIsLoading(false)
 
             return

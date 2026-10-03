@@ -602,6 +602,13 @@ a {
     color: #777f8d;
 }
 
+.add-recipe-form .form-control:disabled {
+    border-color: #303641;
+    color: #9299a6;
+    background-color: #15181e;
+    opacity: 1;
+}
+
 .add-recipe-preview {
     display: grid;
     min-height: 420px;

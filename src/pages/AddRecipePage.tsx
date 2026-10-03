@@ -5,30 +5,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import { isRecipeCategory, recipeCategories } from '../../shared/models/recipe-category'
 import type { RecipeCategory } from '../../shared/models/recipe-category'
-
-const maximumImageSize = 15 * 1024 * 1024
-
-function readFileAsDataUrl(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-
-        reader.onload = () => {
-            if (typeof reader.result !== 'string') {
-                reject(new Error('The Image Could Not Be Read'))
-
-                return
-            }
-
-            resolve(reader.result)
-        }
-
-        reader.onerror = () => {
-            reject(reader.error ?? new Error('The Image Could Not Be Read'))
-        }
-
-        reader.readAsDataURL(file)
-    })
-}
+import { readImageFileAsDataUrl } from '../utils/image-file'
 
 function AddRecipePage() {
     const navigate = useNavigate()
@@ -60,24 +37,8 @@ function AddRecipePage() {
             return
         }
 
-        if (!file.type.startsWith('image/')) {
-            setImageDataUrl(null)
-            setImageName(null)
-            setError('Please Select a Support Image File')
-
-            return
-        }
-
-        if (file.size > maximumImageSize) {
-            setImageDataUrl(null)
-            setImageName(null)
-            setError('The Selected Image Must Be 15 MB or Smaller')
-
-            return
-        }
-
         try {
-            const dataUrl = await readFileAsDataUrl(file)
+            const dataUrl = await readImageFileAsDataUrl(file)
 
             setImageDataUrl(dataUrl)
             setImageName(file.name)
@@ -108,7 +69,7 @@ function AddRecipePage() {
         }
 
         if (!window.cookbookDatabase) {
-            setError('The Electron Desktop API Is Not Available')
+            setError('The Electron Desktop API is Not Available')
 
             return
         }

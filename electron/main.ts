@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from "node:url"
 
 import { closeDatabaseConnection, testDatabaseConnection } from './services/database-service.js'
-import { createRecipe, deleteRecipe, getRecipeCategorySummaries, getRecipesByCategory, getRecipeById } from './repositories/recipe-repository.js'
+import { createRecipe, updateRecipe, deleteRecipe, getRecipeCategorySummaries, getRecipesByCategory, getRecipeById } from './repositories/recipe-repository.js'
 import { isRecipeCategory } from '../shared/models/recipe-category.js'
 import type { RecipeCategory } from '../shared/models/recipe-category.js'
 
@@ -76,6 +76,21 @@ function registerIpcHandlers(): void {
         }
 
         return createRecipe(category, nameValue, imageDataUrlValue)
+    })
+
+    ipcMain.handle('recipes:update', async (_event, categoryValue: unknown, recipeIdValue: unknown, nameValue: unknown, replacementImageDataUrlValue: unknown) => {
+        const category = resolveRecipeCategory(categoryValue)
+        const recipeId = resolveRecipeId(recipeIdValue)
+
+        if (typeof nameValue !== 'string') {
+            throw new Error('The Recipe Name is Invalid')
+        }
+
+        if (replacementImageDataUrlValue !== null && typeof  replacementImageDataUrlValue !== 'string') {
+            throw new Error('The Replacement Image is Invalid')
+        }
+
+        return updateRecipe(category, recipeId, nameValue, replacementImageDataUrlValue)
     })
 
     ipcMain.handle('recipes:delete', async (_event, categoryValue: unknown, recipeIdValue: unknown) => {
