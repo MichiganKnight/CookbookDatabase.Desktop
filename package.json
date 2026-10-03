@@ -49,19 +49,22 @@
     "build": {
         "appId": "com.drew.cookbookdatabase",
         "productName": "Cookbook Database",
+        "npmRebuild": false,
         "asar": true,
+        "asarUnpack": [
+            "node_modules/msnodesqlv8/**/*"
+        ],
         "directories": {
-            "output": "release"
+            "output": "release",
+            "buildResources": "build"
         },
         "files": [
             "dist/**/*",
             "dist-electron/**/*",
             "package.json"
         ],
-        "asarUnpack": [
-            "node_modules/msnodesqlv8/**/*"
-        ],
         "win": {
+            "icon": "build/icon.ico",
             "target": [
                 {
                     "target": "nsis",

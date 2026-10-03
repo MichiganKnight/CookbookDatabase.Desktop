@@ -143,6 +143,10 @@ function resolveRecipeId(value: unknown): number {
 }
 
 app.whenReady().then(() => {
+    if (process.platform === 'win32') {
+        app.setAppUserModelId('com.drew.cookbookdatabase')
+    }
+
     Menu.setApplicationMenu(null)
 
     registerIpcHandlers()
